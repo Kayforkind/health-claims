@@ -30,6 +30,23 @@ const problems = validateClaim({
 console.log(problems); // [] when valid
 ```
 
+## Check a file and build a report
+
+```bash
+node claims.mjs check claims.example.json --html report.html
+node claims.mjs check claims.json --max-review-age-days 180 --fail-on-warn
+```
+
+```
+OK    PLACEHOLDER: replace with a reviewed cla
+1 published, 0 held back
+```
+
+- Each claim prints as `OK`, `WARN`, or `HELD`. A `HELD` claim has at least one error.
+- `--html` writes a standalone page. **Only claims with no errors are rendered.** A held-back claim appears by id and reason only, so unchecked text cannot reach the page.
+- A verdict whose review is older than `--max-review-age-days` (default 365) gets a warning. Warnings fail the check only with `--fail-on-warn`.
+- Exit `0` clean, `1` a held-back claim (or a warning with `--fail-on-warn`), `2` bad input.
+
 ## Rules
 
 - `text` is required.
