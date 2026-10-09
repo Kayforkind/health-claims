@@ -1,0 +1,14 @@
+[
+  {
+    "text": "PLACEHOLDER: replace with a reviewed claim statement. This entry is not an assessment.",
+    "verdict": "not-enough-evidence",
+    "sources": [
+      {
+        "kind": "primary",
+        "url": "https://example.org/placeholder",
+        "title": "Placeholder source (not a real study)",
+        "retrieved": "2026-01-15"
+      }
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "name": "sourced-claims",
+  "version": "0.1.0",
+  "description": "Data model and validator for sourced claims: every verdict must cite a source. Template only; ships with placeholder data, not medical content.",
+  "type": "module",
+  "scripts": { "test": "node --test claims.test.mjs" },
+  "engines": { "node": ">=20" },
+  "license": "MIT"
+}
