@@ -1,4 +1,6 @@
-# sourced-claims
+# sourced-claims 0.1.2
+
+> A sourced-claims validation template. Not medical advice and not an evaluation of scientific truth.
 
 **A validator that refuses a verdict unless it cites a strong source and names a reviewer.**
 
@@ -62,6 +64,16 @@ OK    PLACEHOLDER: replace with a reviewed cla
 npm test
 ```
 
+## Security and publication limits
+
+Validation requires real, non-future calendar dates, nonempty string fields and parsed HTTPS source URLs without credentials. Null and malformed entries are held rather than crashing the run. Rendering revalidates claims instead of trusting caller-supplied status. Public held-back listings use ordinal IDs, never a claim-text fallback; diagnostics do not echo rejected source URLs. Reports carry a restrictive Content Security Policy and cannot overwrite the input. Inputs must be regular files under 2 MiB.
+
+Passing validation proves the data is well-formed, **not** that evidence exists, that a reviewer is qualified, or that a medical verdict is true. Source content is not fetched or evaluated. Keep source data private and require a qualified human review before publishing actual health content.
+
 ## License
 
 MIT
+
+## Release verification
+
+Use a supported Node LTS (22 or 24). Run `npm ci --ignore-scripts` followed by `npm run verify`. The security workflow runs the regression suite on Linux and Windows; it has not yet been executed remotely for this local change. New report/output files are created exclusively; choose fresh filenames or output folders for repeat runs. See [SECURITY.md](SECURITY.md) for the threat model and disclosure guidance.

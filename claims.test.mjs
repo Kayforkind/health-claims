@@ -44,6 +44,37 @@ test('a verdict without a reviewer is rejected', () => {
   assert.ok(validateClaim(base({ reviewer: undefined })).some((e) => /reviewer name/.test(e)));
 });
 
+test('null entries, invalid dates, credential URLs and non-string fields fail closed', () => {
+  for (const c of [null, [], base({ sources: [null] }), base({ reviewedOn: '2026-02-30' }), base({ reviewedOn: '2099-01-01' }), base({ reviewer: {} }), base({ text: ' ' }), base({ sources: [src({ url: 'https://user:pass@example.org' })] })]) assert.ok(validateClaim(c).length);
+  assert.throws(() => renderClaim(base({ sources: [src({ url: 'javascript:alert(1)' })] })), /invalid claim/);
+});
+
+test('held claim text is private without an ID and forged render status cannot publish it', () => {
+  const bad = base({ id: undefined, text: 'PRIVATE-TEXT', sources: [] });
+  const html = renderReport([{ id: 'PRIVATE-TEXT', claim: bad, errors: [] }]);
+  assert.ok(!html.includes('PRIVATE-TEXT'));
+  assert.ok(html.includes('claim-1'));
+});
+
+test('CLI accepts malformed entries as held and protects its input', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'claims-sec-'));
+  const file = join(dir, 'claims.json');
+  const html = join(dir, 'report.html');
+  writeFileSync(file, JSON.stringify([null, base({ id: undefined, text: 'PRIVATE-TEXT', sources: [] })]));
+  const r = spawnSync(process.execPath, [CLI, 'check', file, '--html', html], { encoding: 'utf8' });
+  assert.equal(r.status, 1, r.stderr);
+  assert.ok(!r.stdout.includes('PRIVATE-TEXT'));
+  assert.ok(!readFileSync(html, 'utf8').includes('PRIVATE-TEXT'));
+  assert.equal(spawnSync(process.execPath, [CLI, 'check', file, '--html', file]).status, 2);
+});
+
+test('HTML includes a readable theme and hash-restricted styling', () => {
+  const html = renderReport([{ claim: base(), errors: [] }]);
+  assert.ok(html.includes('color-scheme:light') && html.includes('background:#f5f7fb'));
+  assert.match(html, /style-src 'sha256-[A-Za-z0-9+/]+=*'/);
+  assert.ok(!html.includes("'unsafe-inline'"));
+});
+
 test('rendering escapes claim text', () => {
   const html = renderClaim(base({ text: '<script>x</script>' }));
   assert.ok(!html.includes('<script>'));

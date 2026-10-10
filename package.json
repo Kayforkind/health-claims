@@ -1,9 +1,25 @@
 {
   "name": "sourced-claims",
-  "version": "0.1.0",
-  "description": "Data model and validator for sourced claims: every verdict must cite a source. Template only; ships with placeholder data, not medical content.",
+  "version": "0.1.2",
+  "description": "Template validator for sourced claims, calendar dates and human review. Not medical advice or evidence evaluation.",
   "type": "module",
-  "scripts": { "test": "node --test claims.test.mjs" },
-  "engines": { "node": ">=20" },
-  "license": "MIT"
+  "scripts": {
+    "test": "node --test claims.test.mjs",
+    "verify": "node --check claims.mjs && npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "files": [
+    "claims.mjs",
+    "examples/",
+    "demo/",
+    "SECURITY.md",
+    "LICENSE",
+    "claims.example.json"
+  ],
+  "bin": {
+    "sourced-claims": "claims.mjs"
+  }
 }
